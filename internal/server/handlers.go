@@ -24,9 +24,9 @@ func RegisterHandler(db *db.DB) http.HandlerFunc {
 
 		login := r.PostFormValue("login")
 		password := r.PostFormValue("password")
-		
-		login="123456"
-		password="sa2003"
+
+		login = "123"
+		password = "sa2003"
 
 		if login == "" || password == "" {
 			http.Error(w, "login or password is empty", http.StatusBadRequest)
@@ -51,6 +51,7 @@ func AuthHandler(db *db.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+			return
 		}
 		User := domain.User{}
 
@@ -88,8 +89,10 @@ func AuthHandler(db *db.DB) http.HandlerFunc {
 			return
 		}
 		http.SetCookie(w, &http.Cookie{
-			Name:  "SESSTOKEN",
-			Value: tokenString,
+			Name:     "SESSTOKEN",
+			Value:    tokenString,
+			HttpOnly: true,
+			Path:     "/",
 		})
 		fmt.Fprint(w, "User authenticated successfully")
 	}
