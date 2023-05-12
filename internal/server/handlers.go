@@ -5,11 +5,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
 	"testtask/domain"
 	"testtask/internal/db"
 
 	"github.com/golang-jwt/jwt"
+	"github.com/gorilla/mux"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -19,10 +21,12 @@ func RegisterHandler(db *db.DB) http.HandlerFunc {
 			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
-		
+
 		login := r.PostFormValue("login")
 		password := r.PostFormValue("password")
-
+		
+		login="123456"
+		password="sa2003"
 
 		if login == "" || password == "" {
 			http.Error(w, "login or password is empty", http.StatusBadRequest)
@@ -89,4 +93,24 @@ func AuthHandler(db *db.DB) http.HandlerFunc {
 		})
 		fmt.Fprint(w, "User authenticated successfully")
 	}
+}
+
+func GetUserByName(db *db.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		name := mux.Vars(r)["name"]
+		var U domain.UsersTable
+		row := db.Db.QueryRow("select id,name,age from userstable where name=?", name)
+
+		err := row.Scan(&U.Id, &U.Name, &U.Age)
+		if err != nil {
+			if errors.Is(err, sql.ErrNoRows) {
+				http.Error(w, "no user with this name", http.StatusInternalServerError)
+				return
+			}
+			log.Println(err)
+			return
+		}
+		json.NewEncoder(w).Encode(U)
+	}
+
 }

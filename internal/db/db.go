@@ -26,12 +26,15 @@ func DBConnect() (*DB, error) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	_, err = db.Exec("create table if not exists user_details(user_id integer references users(id),phone text,description text,isMobile integer check(isMobile in (0,1)))")
 	if err != nil {
 		log.Fatal(err)
 	}
-
+	_, err = db.Exec("create table if not exists userstable(id integer primary key autoincrement,name text not null unique,age integer not null)")
+	if err != nil {
+		log.Fatal(err)
+	}
 	return &DB{
 		Db: db,
 	}, nil

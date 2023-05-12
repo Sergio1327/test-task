@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"testtask/internal/db"
@@ -12,10 +13,10 @@ func Run() error {
 		log.Fatal(err)
 	}
 	defer db.Close()
-	router := http.NewServeMux()
+	router := mux.NewRouter()
 	router.HandleFunc("/user/register", RegisterHandler(db))
 	router.HandleFunc("/user/auth", AuthHandler(db))
-	router.HandleFunc("/user", func(w http.ResponseWriter, r *http.Request) {})
+	router.HandleFunc("/user/:name", AuthMiddleWare(GetUserByName(db)))
 
 	err = http.ListenAndServe(":8080", router)
 	if err != nil {
