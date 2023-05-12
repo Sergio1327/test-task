@@ -16,8 +16,8 @@ func Run() error {
 	router := mux.NewRouter()
 	router.HandleFunc("/user/register", RegisterHandler(db))
 	router.HandleFunc("/user/auth", AuthHandler(db))
+	router.HandleFunc("/user/phone", AuthMiddleWare(PhoneAddHandler(db)))
 	router.HandleFunc("/user/{name}", AuthMiddleWare(GetUserByName(db)))
-
 	err = http.ListenAndServe(":8080", router)
 	if err != nil {
 		log.Println(err)

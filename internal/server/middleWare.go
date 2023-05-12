@@ -17,7 +17,7 @@ func AuthMiddleWare(next http.HandlerFunc) http.HandlerFunc {
 
 		tokenString := cookie.Value
 		if tokenString == "" {
-			http.Error(w, "unauthorized 2 ", http.StatusUnauthorized)
+			http.Error(w, "unauthorized 2 | cookie is empty ", http.StatusUnauthorized)
 			return
 		}
 
@@ -28,7 +28,7 @@ func AuthMiddleWare(next http.HandlerFunc) http.HandlerFunc {
 			return []byte("123456789"), nil
 		})
 		if err != nil || !token.Valid {
-			http.Error(w, "Unauthorized 3", http.StatusUnauthorized)
+			http.Error(w, "Unauthorized | token invalid", http.StatusUnauthorized)
 			return
 		}
 		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {

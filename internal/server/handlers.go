@@ -5,14 +5,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
-	"net/http"
-	"testtask/domain"
-	"testtask/internal/db"
-
 	"github.com/golang-jwt/jwt"
 	"github.com/gorilla/mux"
 	"golang.org/x/crypto/bcrypt"
+	"log"
+	"net/http"
+	"strconv"
+	"testtask/domain"
+	"testtask/internal/db"
 )
 
 func RegisterHandler(db *db.DB) http.HandlerFunc {
@@ -24,7 +24,6 @@ func RegisterHandler(db *db.DB) http.HandlerFunc {
 
 		login := r.PostFormValue("login")
 		password := r.PostFormValue("password")
-
 
 		if login == "" || password == "" {
 			http.Error(w, "login or password is empty", http.StatusBadRequest)
@@ -113,4 +112,50 @@ func GetUserByName(db *db.DB) http.HandlerFunc {
 		json.NewEncoder(w).Encode(U)
 	}
 
+}
+
+func PhoneAddHandler(db *db.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			http.Error(w, "method not alowed", http.StatusMethodNotAllowed)
+			return
+		}
+		var PhoneData domain.PhoneData
+		err := json.NewDecoder(r.Body).Decode(&PhoneData)
+		if err != nil {
+			http.Error(w, "bad request", http.StatusBadRequest)
+			return
+		}
+		if len(PhoneData.PhoneNumber) > 12 {
+			http.Error(w, "Phone-Number cannot have more than 12 digits", http.StatusInternalServerError)
+			return
+		}
+		userID := strconv.FormatFloat(r.Context().Value("user_id").(float64), 'f', -1, 64)
+
+		var count int
+
+		err = db.QueryRow("select count(*) from user_details where user_id=? and phone=?", userID, PhoneData.PhoneNumber).Scan(&count)
+		if err != nil {
+			http.Error(w, "", http.StatusInternalServerError)
+			return
+		}
+		if count > 0 {
+			http.Error(w, "phone number already exists", http.StatusConflict)
+			return
+		}
+
+		var isMobile int
+		if PhoneData.IsMobile {
+			isMobile = 1
+		} else {
+			isMobile = 0
+		}
+
+		_, err = db.Exec("insert into user_details(user_id,phone,description,isMobile) values(?,?,?,?)", userID, PhoneData.PhoneNumber, PhoneData.Description, isMobile)
+		if err != nil {
+			fmt.Fprint(w, err)
+			http.Error(w, "error", http.StatusInternalServerError)
+			return
+		}
+	}
 }

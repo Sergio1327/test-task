@@ -17,3 +17,9 @@ type UsersTable struct {
 	Name string `json:"name"`
 	Age  int    `json:"age"`
 }
+
+type PhoneData struct {
+	PhoneNumber string `json:"phone"`
+	Description string `json:"description"`
+	IsMobile    bool   `json:"isMobile"`
+}

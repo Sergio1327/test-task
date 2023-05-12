@@ -48,8 +48,8 @@ func (d *DB) Query(query string, args ...interface{}) (*sql.Rows, error) {
 	return d.Db.Query(query, args...)
 }
 
-func (d *DB) QueryRow(query string, args ...interface{}) (*sql.Row, error) {
-	return d.Db.QueryRow(query, args...), nil
+func (d *DB) QueryRow(query string, args ...interface{}) (*sql.Row) {
+	return d.Db.QueryRow(query, args...)
 }
 
 func (d *DB) Exec(query string, args ...interface{}) (sql.Result, error) {
