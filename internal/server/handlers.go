@@ -25,8 +25,6 @@ func RegisterHandler(db *db.DB) http.HandlerFunc {
 		login := r.PostFormValue("login")
 		password := r.PostFormValue("password")
 
-		login = "123"
-		password = "sa2003"
 
 		if login == "" || password == "" {
 			http.Error(w, "login or password is empty", http.StatusBadRequest)
@@ -82,7 +80,7 @@ func AuthHandler(db *db.DB) http.HandlerFunc {
 			"user_id": RegUser.ID,
 			"login":   RegUser.Login,
 		})
-		secretKey := []byte("")
+		secretKey := []byte("123456789")
 		tokenString, err := token.SignedString(secretKey)
 		if err != nil {
 			http.Error(w, "server error", http.StatusInternalServerError)
@@ -92,7 +90,6 @@ func AuthHandler(db *db.DB) http.HandlerFunc {
 			Name:     "SESSTOKEN",
 			Value:    tokenString,
 			HttpOnly: true,
-			Path:     "/",
 		})
 		fmt.Fprint(w, "User authenticated successfully")
 	}
