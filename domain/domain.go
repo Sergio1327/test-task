@@ -23,3 +23,11 @@ type PhoneData struct {
 	Description string `json:"description"`
 	IsMobile    bool   `json:"isMobile"`
 }
+
+type DBPhoneData struct {
+	PhoneNumID  int
+	ID          float64
+	PhoneNumber string
+	Description string
+	IsMobile    bool
+}

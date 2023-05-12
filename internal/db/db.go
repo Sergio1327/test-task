@@ -27,7 +27,7 @@ func DBConnect() (*DB, error) {
 		log.Fatal(err)
 	}
 
-	_, err = db.Exec("create table if not exists user_details(user_id integer references users(id),phone text,description text,isMobile integer check(isMobile in (0,1)))")
+	_, err = db.Exec("create table if not exists user_details(phoneNumID integer primary key autoincrement,user_id integer references users(id),phone text,description text,isMobile integer check(isMobile in (0,1)))")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -48,7 +48,7 @@ func (d *DB) Query(query string, args ...interface{}) (*sql.Rows, error) {
 	return d.Db.Query(query, args...)
 }
 
-func (d *DB) QueryRow(query string, args ...interface{}) (*sql.Row) {
+func (d *DB) QueryRow(query string, args ...interface{}) *sql.Row {
 	return d.Db.QueryRow(query, args...)
 }
 

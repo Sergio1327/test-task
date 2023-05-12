@@ -1,0 +1,4 @@
+gorilla-mux для роутинга http маршрутов
+github.com/golang-jwt/jwt для генерации jwt токенов
+github.com/mattn/go-sqlite3 драйвер для работы с sqlite3
+golang.org/x/crypto/bcrypt для хэширования паролей

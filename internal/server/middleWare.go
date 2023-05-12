@@ -21,7 +21,7 @@ func AuthMiddleWare(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 
-		token, err := jwt.Parse(tokenString,func(token *jwt.Token) (interface{}, error) {
+		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 			}
@@ -32,7 +32,8 @@ func AuthMiddleWare(next http.HandlerFunc) http.HandlerFunc {
 			return
 		}
 		if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-			r = r.WithContext(context.WithValue(r.Context(), "user_id", claims["user_id"]))
+			value := claims["user_id"]
+			r = r.WithContext(context.WithValue(r.Context(), "user_id", value))
 		}
 		next.ServeHTTP(w, r)
 	})
