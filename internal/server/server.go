@@ -1,11 +1,11 @@
+// Creating an http server and defining route
 package server
 
 import (
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	"testtask/internal/db"
-
-	"github.com/gorilla/mux"
 )
 
 func Run() error {
@@ -22,8 +22,7 @@ func Run() error {
 
 	err = http.ListenAndServe(":8080", router)
 	if err != nil {
-		log.Println(err)
-		return err
+		log.Fatal(err)
 	}
 
 	return nil

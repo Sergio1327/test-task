@@ -1,3 +1,5 @@
+
+// package that contains the main structures and entities
 package domain
 
 type User struct {
@@ -23,11 +25,11 @@ type PhoneData struct {
 	Description string `json:"description"`
 	IsMobile    bool   `json:"isMobile"`
 }
-
 type DBPhoneData struct {
-	PhoneNumID  int
-	ID          float64
-	PhoneNumber string
-	Description string
-	IsMobile    bool
+	PhoneNumID  int	`db:"phonNumID"`
+	User_ID          float64	`db:"user_id"`
+	PhoneNumber string	`db:"phone"`
+	Description string `db:"description"`
+	IsMobile    bool	
 }
+

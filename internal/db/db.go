@@ -1,3 +1,4 @@
+// Package for initializing the database and connecting to it.
 package db
 
 import (
@@ -22,6 +23,8 @@ func DBConnect() (*DB, error) {
 	}
 	log.Println("successfully connected to database")
 
+	
+// .Creation of database tables in case of their absence
 	_, err = db.Exec("create table if not exists users(id integer primary key autoincrement,login text not null unique,password text not null)")
 	if err != nil {
 		log.Fatal(err)

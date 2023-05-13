@@ -7,6 +7,11 @@ import (
 	"net/http"
 )
 
+
+// Create a middleware function that will check if the user is authorized.
+//  This function will get the jwt token from the cookie and if the token is valid it will run the next handler,
+//  if not it will return an error
+
 func AuthMiddleWare(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie("SESSTOKEN")
